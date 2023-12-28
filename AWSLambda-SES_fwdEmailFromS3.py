@@ -141,3 +141,6 @@ def lambda_handler(event, context):
     result = server.sendmail(sender, recipient, message.as_string())
     print(result)
     server.quit()
+
+
+    # een commmentaar
