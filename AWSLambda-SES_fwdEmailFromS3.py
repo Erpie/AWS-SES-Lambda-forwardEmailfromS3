@@ -111,7 +111,7 @@ def send_email(message):
             RawMessage={
                 'Data':message['Data']
             }
-        )
+        ) 
 
     # Display an error if something goes wrong.
     except ClientError as e:
