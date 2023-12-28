@@ -22,7 +22,7 @@ from email.mime.application import MIMEApplication
 
 region = os.environ['Region']
 sender = os.environ['MailSender']
-recipient = os.environ['MailRecipient']
+recipient = os.environ['MailRecipient'] 
 
 
 def get_message_from_s3(message_id):
