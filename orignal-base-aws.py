@@ -22,7 +22,7 @@ from email.mime.application import MIMEApplication
 
 region = os.environ['Region']
 sender = os.environ['MailSender']
-recipient = os.environ['MailRecipient'] 
+recipient = os.environ['MailRecipient']
 
 
 def get_message_from_s3(message_id):
@@ -42,7 +42,6 @@ def get_message_from_s3(message_id):
 
     # Get the email object from the S3 bucket.
     object_s3 = client_s3.get_object(Bucket=incoming_email_bucket, Key=object_path)
-    
     # Read the content of the message.
     file = object_s3['Body'].read()
 
@@ -61,24 +60,19 @@ def create_message(file_dict):
     # Parse the email body.
     mail_object = email.message_from_string(file_dict['file'].decode('utf-8'))
 
-    # Create a new message
-    mail_from_emailaddress = mail_object['From']
-    #mail_from_emailaddress = email.utils.parseaddr(mail_from_emailaddress)  -> genreates pro
+    # Create a new subject line.
     subject_original = mail_object['Subject']
     sent_date = mail_object['date']
     subject = "FW: " + subject_original
 
    # The body text of the email.
     body_text = ("The attached message was received from "
-              #+ separator.join(mail_object.get_all('From'))
-              #+ ". Sender e-mailaddress = "
-              + mail_from_emailaddress
+              + separator.join(mail_object.get_all('From'))
               + ". This message is archived at " + file_dict['path'])
                  
     # The file name to use for the attached message. Uses regex to remove all
     # non-alphanumeric characters, and appends a file extension.
     filename = re.sub('[^0-9a-zA-Z]+', '_', subject_original) + ".eml"
-    
     # Create a MIME container.
     msg = MIMEMultipart()
     
@@ -92,7 +86,6 @@ def create_message(file_dict):
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = recipient
-    
     # Attach the file object to the message.
     msg.attach(mail_object)
     
@@ -115,7 +108,7 @@ def send_email(message):
             RawMessage={
                 'Data':message['Data']
             }
-        ) 
+        )
 
     # Display an error if something goes wrong.
     except ClientError as e:
@@ -145,6 +138,3 @@ def lambda_handler(event, context):
     result = server.sendmail(sender, recipient, message.as_string())
     print(result)
     server.quit()
-
-
-    # een commmentaar erbij
